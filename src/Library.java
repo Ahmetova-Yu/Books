@@ -34,7 +34,7 @@ public class Library extends JFrame {
     private DefaultTableModel tableModel;
 
     public Library() {
-
+        loadLibrary();
         setTitle("Библиотека управления книгами");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,6 +60,10 @@ public class Library extends JFrame {
             if (!title.isEmpty() && !author.isEmpty()) {
                 Book book = new Book(title, author);
                 library.add(book);
+                updateTable(library);
+                saveLibrary();
+                titleField.setText("");
+                authorField.setText("");
 
             } else {
                 JOptionPane.showMessageDialog(this, "Заполните все поля!");
@@ -83,13 +87,27 @@ public class Library extends JFrame {
                     res.add(book);
                 }
             }
-
+            updateTable(library);
         });
 
         String[] cols = {"Название", "Автор"};
         tableModel = new DefaultTableModel(cols, 0);
         JTable table = new JTable(tableModel);
+        updateTable(library);
 
+        JScrollPane tableScroll = new JScrollPane(table);
+
+        setLayout(new BorderLayout());
+        add(addPanel, BorderLayout.NORTH);
+        add(addPanel, BorderLayout.CENTER);
+        add(addPanel, BorderLayout.SOUTH);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                saveLibrary();
+            }
+        });
 
     }
 
