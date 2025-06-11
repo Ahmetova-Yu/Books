@@ -31,7 +31,7 @@ public class Library extends JFrame {
     private JTextField titleField;
     private JTextField authorField;
     private JTextField findField;
-    private DefaultTableModel table;
+    private DefaultTableModel tableModel;
 
     public Library() {
 
@@ -83,8 +83,38 @@ public class Library extends JFrame {
                     res.add(book);
                 }
             }
+
         });
 
+        String[] cols = {"Название", "Автор"};
+        tableModel = new DefaultTableModel(cols, 0);
+        JTable table = new JTable(tableModel);
+
+
+    }
+
+    private void updateTable(List<Book> books) {
+        tableModel.setRowCount(0);
+
+        for (Book book : library) {
+            tableModel.addRow(new Object[]{book.getTitle(), book.getAuthor()});
+        }
+    }
+
+    private void loadLibrary() {
+        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(DATA_FILE))) {
+            library = (List<Book>) ois.readObject();
+        } catch (Exception e) {
+            library = new ArrayList<>();
+        }
+    }
+
+    private void saveLibrary() {
+        try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(DATA_FILE))) {
+            oos.writeObject(library);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Ошибка при сохранении данных");
+        }
     }
 
 }
