@@ -15,7 +15,7 @@ class Book implements Serializable {
         this.author = author;
     }
 
-    public String getTtitle() {
+    public String getTitle() {
         return title;
     }
 
@@ -53,6 +53,37 @@ public class Library extends JFrame {
         addPanel.add(new JLabel());
         addPanel.add(addBut);
 
+        addBut.addActionListener(e -> {
+            String title = titleField.getText().trim();
+            String author = titleField.getText().trim();
+
+            if (!title.isEmpty() && !author.isEmpty()) {
+                Book book = new Book(title, author);
+                library.add(book);
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Заполните все поля!");
+            }
+        });
+
+        JPanel findPanel = new JPanel(new BorderLayout());
+        findField = new JTextField();
+        JButton findBut = new JButton("Поиск");
+
+        findPanel.setBorder(BorderFactory.createTitledBorder("Поиск по названию"));
+        findPanel.add(findField, BorderLayout.CENTER);
+        findPanel.add(findBut, BorderLayout.EAST);
+
+        findBut.addActionListener(e -> {
+            String query = findField.getText().toLowerCase().trim();
+            List<Book> res = new ArrayList<>();
+
+            for (Book book : library) {
+                if (book.getTitle().toLowerCase().contains(query)) {
+                    res.add(book);
+                }
+            }
+        });
 
     }
 
